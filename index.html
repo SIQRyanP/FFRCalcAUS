@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html{color-scheme:light}body{margin:0}[hidden]{display:none!important}</style>
+<title>Fatigue Fuel Recovery Calculator (AU)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: inputs as a three-step worksheet on the left, a sticky results panel on the right; stacks on phones. */
+:root{
+  --bg:#eef1f2; --panel:#ffffff; --ink:#15222b; --muted:#5a6a74; --line:#d4dbdf;
+  --road:#1d3340; --road-ink:#eef4f6; --road-muted:#9fb3bd;
+  --hivis:#f2b01e; --hivis-ink:#2a1d00; --good:#1f8a5b; --warn:#b5561a; --track:#dfe5e8;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:22px}
+.brand{font-family:var(--f-display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,4.4vw,44px);line-height:1.02;margin:4px 0 0;text-wrap:balance;letter-spacing:.005em}
+.lede{max-width:62ch;color:var(--muted);margin:10px 0 0}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:22px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:20px 20px 22px;margin-bottom:16px}
+.step-head{display:flex;gap:14px;align-items:baseline;margin-bottom:4px}
+.step-no{font-family:var(--f-display);font-weight:700;font-size:15px;color:var(--hivis-ink);background:var(--hivis);min-width:28px;height:28px;display:grid;place-items:center;border-radius:3px;flex:none;transform:translateY(-2px)}
+.step h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0;letter-spacing:.01em}
+.step p.help{margin:2px 0 14px 42px;color:var(--muted);font-size:14px;max-width:60ch}
+@media (max-width:520px){.step p.help{margin-left:0}}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px 16px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label,.lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.inp{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:4px;background:var(--bg);overflow:hidden}
+.inp:focus-within{outline:2px solid var(--hivis);outline-offset:1px}
+.inp span{font-family:var(--f-data);font-size:13px;color:var(--muted);padding:0 10px;display:grid;place-items:center;background:var(--panel);white-space:nowrap}
+.inp input,.inp select{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--f-data);font-size:15px;padding:9px 10px;outline:none}
+.inp select{font-family:var(--f-body);font-size:14px;padding-right:6px}
+.hint{font-size:12.5px;color:var(--muted)}
+
+.slider{margin-top:16px}
+.slider-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.slider-val{font-family:var(--f-data);font-weight:500;font-size:18px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;margin:4px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--hivis) 0 var(--p,50%),var(--track) var(--p,50%) 100%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--track)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:var(--hivis)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--panel);border:3px solid var(--hivis);margin-top:-7px;cursor:pointer}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--panel);border:3px solid var(--hivis);cursor:pointer}
+input[type=range]:focus-visible{outline:2px solid var(--hivis);outline-offset:2px}
+.scale{display:flex;justify-content:space-between;font-family:var(--f-data);font-size:11.5px;color:var(--muted)}
+
+.tolerance{border:1px dashed var(--line);border-radius:6px;padding:14px;margin-top:6px}
+.bands{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.band{font-family:var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px;padding:8px 6px;cursor:pointer;text-align:center;line-height:1.25}
+.band b{display:block;font-family:var(--f-display);font-size:16px;font-weight:600}
+.band small{font-family:var(--f-data);font-size:11.5px;color:var(--muted)}
+.band[aria-pressed="true"]{border-color:var(--hivis);box-shadow:inset 0 0 0 1px var(--hivis)}
+.band:focus-visible{outline:2px solid var(--hivis);outline-offset:2px}
+
+.toggle{display:flex;gap:10px;align-items:center;cursor:pointer;font-weight:600}
+.toggle input{width:18px;height:18px;accent-color:var(--hivis)}
+
+/* Results */
+.results{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);background:var(--road);color:var(--road-ink);border-radius:6px;padding:22px 22px 20px;overflow:hidden}
+@media (max-width:900px){.results{position:static}}
+.results .lbl{color:var(--road-muted)}
+.stripe{height:8px;margin:-22px -22px 18px;background:repeating-linear-gradient(-45deg,var(--hivis) 0 14px,var(--road) 14px 28px)}
+.big{font-family:var(--f-display);font-weight:700;font-size:clamp(40px,6vw,58px);line-height:1;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.sub{color:var(--road-muted);font-size:14px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin:18px 0}
+.kv div{background:var(--road);padding:10px 12px;min-width:0}
+.kv b{display:block;font-family:var(--f-data);font-weight:500;font-size:17px;font-variant-numeric:tabular-nums;color:var(--road-ink)}
+.kv span{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--road-muted)}
+.verdict{display:flex;gap:10px;align-items:flex-start;border-radius:4px;padding:10px 12px;font-size:14px;margin-bottom:16px;background:rgba(255,255,255,.06)}
+.pill{font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;flex:none;margin-top:1px}
+.pill.good{background:var(--good);color:#fff}.pill.warn{background:var(--warn);color:#fff}
+.bars{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.bar-row{display:grid;grid-template-columns:92px 1fr 84px;gap:10px;align-items:center;font-size:13px}
+.bar-row .name{color:var(--road-muted)}
+.bar-row .amt{font-family:var(--f-data);text-align:right;font-variant-numeric:tabular-nums}
+.bar-track{position:relative;height:14px;background:rgba(255,255,255,.08);border-radius:2px}
+.bar-fill{position:absolute;inset:0 auto 0 0;background:var(--hivis);border-radius:2px;transition:width .25s}
+.bar-fill.cost{background:var(--road-muted)}
+.bar-row.sel .name{color:var(--road-ink);font-weight:600}
+@media (prefers-reduced-motion:reduce){.bar-fill{transition:none}}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button.btn{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:4px;padding:10px 14px;cursor:pointer;background:var(--hivis);color:var(--hivis-ink)}
+button.btn.ghost{background:transparent;color:var(--road-ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
+
+.math{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 20px;margin-top:16px}
+.math h3{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0 0 10px}
+.math ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.math li{font-size:14px}
+.math code{font-family:var(--f-data);font-size:13px;background:var(--bg);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere}
+.fine{font-size:12.5px;color:var(--muted);margin-top:14px;max-width:80ch}
+.copied{font-size:13px;color:var(--road-muted);align-self:center}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">SafetyIQ · Fatigue Risk Management · Australia</div>
+      <h1>Fatigue Fuel Recovery Calculator</h1>
+      <p class="lede">Enter your own fleet and telematics numbers in kilometres, litres and AUD, then choose the efficiency gain you're comfortable standing behind. Every figure below is built from your inputs. The example values are placeholders to replace.</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div>
+      <!-- STEP 1 -->
+      <section class="step">
+        <div class="step-head"><div class="step-no">1</div><h2>Your fleet</h2></div>
+        <p class="help">This sets your baseline annual fuel spend.</p>
+        <div class="fields">
+          <div class="field"><label for="trucks">Fleet size</label><div class="inp"><input id="trucks" type="number" min="1" value="100" inputmode="numeric"><span>trucks</span></div></div>
+          <div class="field"><label for="miles">Avg kilometres per truck per day</label><div class="inp"><input id="miles" type="number" min="1" value="725" inputmode="numeric"><span>km</span></div></div>
+          <div class="field"><label for="days">Working days per year</label><div class="inp"><input id="days" type="number" min="1" max="366" value="260" inputmode="numeric"><span>days</span></div></div>
+          <div class="field"><label for="mpg">Current fleet fuel use</label><div class="inp"><input id="mpg" type="number" min="1" step="0.1" value="45" inputmode="decimal"><span>L/100 km</span></div></div>
+          <div class="field"><label for="price">Diesel price (AUD)</label><div class="inp"><span>$</span><input id="price" type="number" min="0" step="0.01" value="1.95" inputmode="decimal"><span>/ L</span></div></div>
+        </div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="step">
+        <div class="step-head"><div class="step-no">2</div><h2>Your driving events</h2></div>
+        <p class="help">Pull harsh braking and harsh acceleration counts from your telematics platform (Teletrac Navman, MTData, Geotab, Samsara, etc.). This sizes the fuel waste that fatigue contributes to.</p>
+        <div class="fields">
+          <div class="field"><label for="events">Harsh events</label><div class="inp"><input id="events" type="number" min="0" step="0.1" value="6" inputmode="decimal"></div></div>
+          <div class="field"><label for="unit">Reported as</label><div class="inp"><select id="unit"><option value="day">per truck per day</option><option value="k">per 1,000 km</option></select></div></div>
+        </div>
+        <div class="slider">
+          <div class="slider-top"><span class="lbl" id="galLbl">Fuel lost per harsh event</span><span class="slider-val" id="galOut"></span></div>
+          <input id="gal" type="range" min="0.2" max="1.9" step="0.05" value="0.95" aria-labelledby="galLbl">
+          <div class="scale"><span>0.2 L</span><span>1.9 L</span></div>
+          <div class="hint">ORNL and VTTI research puts a heavy prime mover stop-and-restart cycle at roughly 0.95–1.9 L. Utes and light rigid trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.</div>
+        </div>
+        <div class="slider">
+          <div class="slider-top"><span class="lbl" id="shareLbl">Share of events linked to fatigued drivers</span><span class="slider-val" id="shareOut"></span></div>
+          <input id="share" type="range" min="10" max="70" step="5" value="40" aria-labelledby="shareLbl">
+          <div class="scale"><span>10%</span><span>70%</span></div>
+          <div class="hint">If you can compare events on late or long shifts against rested shifts, use that. Otherwise pick a share you'd defend.</div>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="step">
+        <div class="step-head"><div class="step-no">3</div><h2>Your efficiency gain</h2></div>
+        <p class="help">How much of that fatigue-linked waste do you believe managing fatigue would remove? Pick a range, then settle on a number inside it.</p>
+        <div class="tolerance">
+          <div class="bands" role="group" aria-label="Tolerance range">
+            <button class="band" type="button" data-min="5" data-max="15" id="bandC"><b>Cautious</b><small>5–15%</small></button>
+            <button class="band" type="button" data-min="15" data-max="30" id="bandM"><b>Moderate</b><small>15–30%</small></button>
+            <button class="band" type="button" data-min="30" data-max="45" id="bandA"><b>Confident</b><small>30–45%</small></button>
+          </div>
+          <div class="slider" style="margin-top:10px">
+            <div class="slider-top"><span class="lbl" id="redLbl">Reduction in fatigue-linked events</span><span class="slider-val" id="redOut"></span></div>
+            <input id="red" type="range" min="15" max="30" step="1" value="20" aria-labelledby="redLbl">
+            <div class="scale"><span id="redMin"></span><span id="redMax"></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="step">
+        <div class="step-head"><div class="step-no">4</div><h2>Investment and other savings</h2></div>
+        <p class="help">Compare the recovery against what the program costs. Incident avoidance is optional and uses the same reduction you picked in step 3.</p>
+        <div class="fields">
+          <div class="field"><label for="drivers">Drivers assessed</label><div class="inp"><input id="drivers" type="number" min="0" value="100" inputmode="numeric"><span>drivers</span></div></div>
+          <div class="field"><label for="ppm">Cost per driver per month (AUD)</label><div class="inp"><span>$</span><input id="ppm" type="number" min="0" step="0.5" value="30" inputmode="decimal"></div><span class="hint">Replace with the quoted rate.</span></div>
+        </div>
+        <div style="margin-top:18px"><label class="toggle"><input type="checkbox" id="incOn"> Include fatigue-related incident avoidance</label></div>
+        <div class="fields" id="incFields" style="margin-top:12px" hidden>
+          <div class="field"><label for="inc">Fatigue-related incidents per year</label><div class="inp"><input id="inc" type="number" min="0" value="6" inputmode="numeric"></div></div>
+          <div class="field"><label for="incCost">Avg cost per incident (AUD)</label><div class="inp"><span>$</span><input id="incCost" type="number" min="0" step="1000" value="50000" inputmode="numeric"></div><span class="hint">Claims, repairs, downtime, admin, and Chain of Responsibility exposure.</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- RESULTS -->
+    <aside class="results" aria-live="polite">
+      <div class="stripe" aria-hidden="true"></div>
+      <div class="lbl" id="headLbl">Annual savings at your chosen gain (AUD)</div>
+      <div class="big" id="total">$0</div>
+      <div class="sub" id="totalSub"></div>
+
+      <div class="kv">
+        <div><b id="gals">0</b><span>Litres recovered / yr</span></div>
+        <div><b id="mpgGain">0%</b><span>Fleet fuel use reduction</span></div>
+        <div><b id="evAvoid">0</b><span>Harsh events avoided / yr</span></div>
+        <div><b id="perTruck">$0</b><span>Savings per truck / yr</span></div>
+        <div><b id="invest">$0</b><span>Annual investment (AUD)</span></div>
+        <div><b id="roi">0%</b><span>Net ROI</span></div>
+      </div>
+
+      <div class="verdict"><span class="pill" id="vPill">—</span><span id="vText"></span></div>
+
+      <div class="lbl">Savings across your range vs. investment</div>
+      <div class="bars" id="bars"></div>
+
+      <div class="actions">
+        <button class="btn" type="button" id="copy">Copy summary</button>
+        <button class="btn ghost" type="button" id="reset">Reset examples</button>
+        <span class="copied" id="copied"></span>
+      </div>
+    </aside>
+  </div>
+
+  <section class="math">
+    <h3>How your number is built</h3>
+    <ol id="mathList"></ol>
+    <p class="fine">This is an estimate built from your own figures. It assumes fuel lost per harsh event is regained when the truck returns to speed, and that fatigue management lowers the fatigue-linked share of events by the reduction you selected. It doesn't count idle time, route deviation or speeding, which also affect fuel use. Actual results depend on your fleet, routes and how flagged drivers are managed.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const ids = ["trucks","miles","days","mpg","price","events","unit","gal","share","red","drivers","ppm","inc","incCost","incOn"];
+  const defaults = {};
+  ids.forEach(i => { const el=$(i); defaults[i] = el.type==="checkbox" ? el.checked : el.value; });
+  let band = {min:15,max:30,id:"bandM"};
+  let driversTouched = false;
+
+  const usd = n => (n<0?"-":"") + "$" + Math.round(Math.abs(n)).toLocaleString("en-AU");
+  const num = (n,d=0) => Number(n).toLocaleString("en-AU",{minimumFractionDigits:d,maximumFractionDigits:d});
+  const v = id => { const x = parseFloat($(id).value); return isFinite(x) && x>0 ? x : 0; };
+
+  function paint(r){ const p = (r.value - r.min)/(r.max - r.min)*100; r.style.setProperty("--p", p+"%"); }
+
+  function inputs(){
+    return { trucks:v("trucks"), miles:v("miles"), days:v("days"), mpg:v("mpg"), price:v("price"),
+      events:v("events"), unit:$("unit").value, gal:parseFloat($("gal").value), share:parseFloat($("share").value)/100,
+      red:parseFloat($("red").value)/100, drivers:v("drivers"), ppm:v("ppm"),
+      incOn:$("incOn").checked, inc:v("inc"), incCost:v("incCost") };
+  }
+
+  function model(x, red){
+    const annualMiles = x.trucks*x.miles*x.days;
+    const baseGal = annualMiles*x.mpg/100;
+    const evPerTruckDay = x.unit==="day" ? x.events : x.events*x.miles/1000;
+    const annualEvents = x.trucks*x.days*evPerTruckDay;
+    const fatigueEvents = annualEvents*x.share;
+    const wasteGal = fatigueEvents*x.gal;
+    const savedGal = Math.min(wasteGal*red, baseGal);
+    const fuel = savedGal*x.price;
+    const incident = x.incOn ? x.inc*x.incCost*red : 0;
+    const total = fuel + incident;
+    const newGal = baseGal - savedGal;
+    const mpgGain = baseGal>0 ? savedGal/baseGal : 0;
+    const invest = x.drivers*x.ppm*12;
+    return {annualMiles, baseGal, baseCost:baseGal*x.price, evPerTruckDay, annualEvents, fatigueEvents, wasteGal,
+      savedGal, fuel, incident, total, mpgGain, invest, avoided:fatigueEvents*red,
+      net: total-invest, roi: invest ? (total-invest)/invest : 0};
+  }
+
+  function update(){
+    [$("gal"),$("share"),$("red")].forEach(paint);
+    $("galOut").textContent = num($("gal").value,2)+" L";
+    $("shareOut").textContent = $("share").value+"%";
+    $("redOut").textContent = $("red").value+"%";
+    $("redMin").textContent = band.min+"%"; $("redMax").textContent = band.max+"%";
+    $("incFields").hidden = !$("incOn").checked;
+
+    const x = inputs();
+    const m = model(x, x.red);
+    const lo = model(x, band.min/100), hi = model(x, band.max/100);
+
+    $("total").textContent = usd(m.total);
+    $("totalSub").textContent = x.incOn
+      ? usd(m.fuel)+" fuel + "+usd(m.incident)+" incident avoidance, at a "+$("red").value+"% reduction"
+      : "Fuel only, at a "+$("red").value+"% reduction in fatigue-linked events";
+    $("gals").textContent = num(m.savedGal);
+    $("mpgGain").textContent = num(m.mpgGain*100,2)+"%";
+    $("evAvoid").textContent = num(m.avoided);
+    $("perTruck").textContent = x.trucks ? usd(m.total/x.trucks) : "$0";
+    $("invest").textContent = usd(m.invest);
+    $("roi").textContent = m.invest ? num(m.roi*100)+"%" : "—";
+
+    // Break-even reduction
+    const perUnit = m.wasteGal*x.price + (x.incOn ? x.inc*x.incCost : 0); // savings at 100% reduction
+    const be = perUnit>0 ? m.invest/perUnit : Infinity;
+    const pill = $("vPill"), vt = $("vText");
+    if(!m.invest){ pill.className="pill good"; pill.textContent="No cost set"; vt.textContent="Add the per-driver rate in step 4 to see payback."; }
+    else if(lo.total >= m.invest){ pill.className="pill good"; pill.textContent="Pays back";
+      vt.textContent = "Covers the investment even at the bottom of your range ("+band.min+"%). Break-even is a "+num(be*100,1)+"% reduction; payback in about "+num(m.invest/(m.total/12),1)+" months at your chosen gain."; }
+    else if(m.total >= m.invest){ pill.className="pill good"; pill.textContent="Pays back";
+      vt.textContent = "Covers the investment at your chosen gain. Break-even is a "+num(be*100,1)+"% reduction; payback in about "+num(m.invest/(m.total/12),1)+" months."; }
+    else if(be <= 1){ pill.className="pill warn"; pill.textContent="Short";
+      vt.textContent = "Break-even needs a "+num(be*100,1)+"% reduction in fatigue-linked events"+(x.incOn?"":". Adding incident avoidance in step 4 usually closes the gap")+"."; }
+    else { pill.className="pill warn"; pill.textContent="Short";
+      vt.textContent = x.incOn ? "At these inputs the savings don't reach the investment at any reduction." : "Fuel alone doesn't cover the investment at these inputs. Turn on incident avoidance in step 4 to see the full picture."; }
+
+    // Bars
+    const rows = [
+      {name:"Low · "+band.min+"%", val:lo.total},
+      {name:"Chosen · "+$("red").value+"%", val:m.total, sel:true},
+      {name:"High · "+band.max+"%", val:hi.total},
+      {name:"Investment", val:m.invest, cost:true}
+    ];
+    const max = Math.max(1, ...rows.map(r=>r.val));
+    $("bars").innerHTML = rows.map(r =>
+      '<div class="bar-row'+(r.sel?' sel':'')+'"><span class="name">'+r.name+'</span><div class="bar-track"><div class="bar-fill'+(r.cost?' cost':'')+'" style="width:'+(r.val/max*100)+'%"></div></div><span class="amt">'+usd(r.val)+'</span></div>'
+    ).join("");
+
+    // Math
+    const evLine = x.unit==="day"
+      ? num(x.events,1)+" events per truck per day"
+      : num(x.events,1)+" per 1,000 km × "+num(x.miles)+" km = "+num(m.evPerTruckDay,2)+" events per truck per day";
+    const L = [
+      "Baseline fuel: <code>"+num(x.trucks)+" trucks × "+num(x.miles)+" km × "+num(x.days)+" days × "+num(x.mpg,1)+" L/100 km = "+num(m.baseGal)+" L</code> ("+usd(m.baseCost)+" at $"+num(x.price,2)+"/L)",
+      "Harsh events: "+evLine+", or <code>"+num(m.annualEvents)+" events / yr</code>",
+      "Fatigue-linked: <code>"+num(m.annualEvents)+" × "+Math.round(x.share*100)+"% = "+num(m.fatigueEvents)+" events</code>, wasting <code>× "+num(x.gal,2)+" L = "+num(m.wasteGal)+" L / yr</code>",
+      "Recovered: <code>"+num(m.wasteGal)+" L × "+Math.round(x.red*100)+"% = "+num(m.savedGal)+" L × $"+num(x.price,2)+" = "+usd(m.fuel)+"</code>",
+    ];
+    if(x.incOn) L.push("Incident avoidance: <code>"+num(x.inc)+" incidents × "+usd(x.incCost)+" × "+Math.round(x.red*100)+"% = "+usd(m.incident)+"</code>");
+    L.push("Investment: <code>"+num(x.drivers)+" drivers × $"+num(x.ppm,2)+" × 12 = "+usd(m.invest)+"</code>");
+    $("mathList").innerHTML = L.map(s=>"<li>"+s+"</li>").join("");
+
+    window.__summary = [
+      "Fatigue Fuel Recovery estimate (AUD)",
+      "Fleet: "+num(x.trucks)+" trucks, "+num(x.miles)+" km/day, "+num(x.days)+" days/yr, "+num(x.mpg,1)+" L/100 km, $"+num(x.price,2)+"/L",
+      "Harsh events: "+num(x.events,1)+(x.unit==="day"?" per truck per day":" per 1,000 km")+"; "+Math.round(x.share*100)+"% fatigue-linked; "+num(x.gal,2)+" L per event",
+      "Chosen reduction: "+Math.round(x.red*100)+"% (range "+band.min+"–"+band.max+"%)",
+      "Fuel recovered: "+num(m.savedGal)+" L / "+usd(m.fuel)+" per year ("+num(m.mpgGain*100,2)+"% lower fleet fuel use)",
+      x.incOn ? "Incident avoidance: "+usd(m.incident)+" per year" : null,
+      "Total annual savings: "+usd(m.total)+" (range "+usd(lo.total)+" to "+usd(hi.total)+")",
+      "Annual investment: "+usd(m.invest)+"; net ROI "+(m.invest?num(m.roi*100)+"%":"n/a")+(isFinite(be)?"; break-even at "+num(be*100,1)+"% reduction":"")
+    ].filter(Boolean).join("\n");
+  }
+
+  function setBand(btn, keepVal){
+    band = {min:+btn.dataset.min, max:+btn.dataset.max, id:btn.id};
+    document.querySelectorAll(".band").forEach(b=>b.setAttribute("aria-pressed", b===btn?"true":"false"));
+    const r = $("red"); r.min = band.min; r.max = band.max;
+    const cur = +r.value;
+    r.value = keepVal && cur>=band.min && cur<=band.max ? cur : Math.round((band.min+band.max)/2);
+    update();
+  }
+  document.querySelectorAll(".band").forEach(b=>b.addEventListener("click",()=>setBand(b,false)));
+
+  ids.forEach(i => $(i).addEventListener("input", () => {
+    if(i==="drivers") driversTouched = true;
+    if(i==="trucks" && !driversTouched) $("drivers").value = $("trucks").value;
+    update();
+  }));
+  $("incOn").addEventListener("change", update);
+
+  $("reset").addEventListener("click", () => {
+    ids.forEach(i => { const el=$(i); if(el.type==="checkbox") el.checked=defaults[i]; else el.value=defaults[i]; });
+    driversTouched=false; setBand($("bandM"), false); $("red").value=20; update();
+  });
+
+  $("copy").addEventListener("click", () => {
+    const done = t => { $("copied").textContent=t; setTimeout(()=>$("copied").textContent="",2500); };
+    try {
+      navigator.clipboard.writeText(window.__summary).then(()=>done("Copied"), ()=>fallback());
+    } catch(e){ fallback(); }
+    function fallback(){
+      const ta=document.createElement("textarea"); ta.value=window.__summary; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand("copy"); done("Copied"); }catch(e){ done("Select and copy the summary manually"); }
+      ta.remove();
+    }
+  });
+
+  setBand($("bandM"), true);
+})();
+</script>
+
+</body>
+</html>
