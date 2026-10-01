@@ -195,11 +195,11 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
       </section>
 
       <section class="step">
-        <div class="step-head"><div class="step-no">5</div><h2>Cost of one serious crash</h2><span class="step-sub">Revenue needed to earn back a self-insured loss.</span></div>
+        <div class="step-head"><div class="step-no">5</div><h2>Cost of one serious crash</h2><span class="step-sub">Revenue needed, at your adjusted EBITDA margin, to earn back a self-insured loss.</span></div>
         <div class="fields three">
           <div class="field"><label class="lbl" for="crash" id="crashLbl">Crash cost $</label><div class="inp"><input id="crash" type="number" min="0" step="5000" inputmode="numeric"></div></div>
           <div class="field"><label class="lbl" for="sir" id="sirLbl">Self-insured up to $</label><div class="inp"><input id="sir" type="number" min="0" step="50000" inputmode="numeric"></div></div>
-          <div class="field"><label class="lbl" for="margin">Profit margin</label><div class="inp"><input id="margin" type="number" min="0.1" max="100" step="0.5" inputmode="decimal"><span>%</span></div></div>
+          <div class="field"><label class="lbl" for="margin">Adj. EBITDA margin</label><div class="inp"><input id="margin" type="number" min="0.1" max="100" step="0.5" inputmode="decimal"><span>%</span></div></div>
         </div>
       </section>
     </div>
@@ -334,7 +334,7 @@ const CFG = {
     const retained = Math.min(x.crash, x.sir || x.crash);
     const crashRev = x.margin ? retained/x.margin : 0;
     T("crashRev", big(crashRev)+" revenue");
-    T("crashTxt", "to earn back one "+money(x.crash)+" crash"+(x.crash > x.sir && x.sir ? " ("+money(retained)+" self-insured)" : "")+" at a "+fmt(x.margin*100,1)+"% margin.");
+    T("crashTxt", "to earn back one "+money(x.crash)+" crash"+(x.crash > x.sir && x.sir ? " ("+money(retained)+" self-insured)" : "")+" at a "+fmt(x.margin*100,1)+"% adjusted EBITDA margin.");
     const perFull = m.wasteVol*x.price + (x.incOn ? x.inc*x.incCost : 0);
     const be = perFull>0 ? m.invest/perFull : Infinity;
     const pill=$("vPill"), say = (cls,label,text)=>{ pill.className="pill "+cls; pill.textContent=label; T("vText",text); };
@@ -363,7 +363,7 @@ const CFG = {
       "Fatigue-linked: <code>"+fmt(m.annualEvents)+" × "+Math.round(x.share*100)+"% = "+fmt(m.fatigueEvents)+"</code> × <code>"+fmt(x.gal,2)+" "+V+" = "+fmt(m.wasteVol)+" "+V+" wasted</code>",
       "Recovered: <code>"+fmt(m.wasteVol)+" "+V+" × "+pct+"% = "+fmt(m.savedVol)+" "+V+" × $"+fmt(x.price,2)+" = "+money(m.fuel)+"</code>"];
     if(x.incOn) L.push("Incidents: <code>"+fmt(x.inc)+" × "+money(x.incCost)+" × "+pct+"% = "+money(m.incident)+"</code>");
-    L.push("Crash offset: <code>"+money(retained)+" self-insured loss ÷ "+fmt(x.margin*100,1)+"% margin = "+money(crashRev)+" revenue</code>");
+    L.push("Crash offset: <code>"+money(retained)+" self-insured loss ÷ "+fmt(x.margin*100,1)+"% adjusted EBITDA margin = "+money(crashRev)+" revenue</code>");
     L.push("Investment: <code>"+fmt(x.drivers)+" drivers × $"+fmt(x.ppm,2)+" × 12 = "+money(m.invest)+"</code>");
     $("mathList").innerHTML = L.map(s=>"<li>"+s+"</li>").join("");
 
@@ -375,7 +375,7 @@ const CFG = {
       "Fuel recovered: "+fmt(m.savedVol)+" "+V+" / "+money(m.fuel)+" per year ("+fmt(m.gain*100,2)+"% "+CFG.gainLbl.toLowerCase()+")",
       x.incOn ? "Incident avoidance: "+money(m.incident)+" per year" : null,
       "Total annual savings: "+money(m.total)+" (range "+money(lo.total)+" to "+money(hi.total)+")",
-      "One serious crash: "+money(x.crash)+" ("+money(retained)+" self-insured) needs "+money(crashRev)+" in revenue to offset at "+fmt(x.margin*100,1)+"% margin",
+      "One serious crash: "+money(x.crash)+" ("+money(retained)+" self-insured) needs "+money(crashRev)+" in revenue to offset at "+fmt(x.margin*100,1)+"% adjusted EBITDA margin",
       "Annual investment: "+money(m.invest)+"; net ROI "+(m.invest?fmt(m.roi*100)+"%":"n/a")+(isFinite(be)?"; break-even at "+fmt(be*100,1)+"% reduction":"")
     ].filter(Boolean).join("\n");
   }
