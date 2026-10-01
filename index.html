@@ -21,47 +21,48 @@
 *{box-sizing:border-box}
 html,body{margin:0}
 [hidden]{display:none!important}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
 .wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:14px}
 header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-bottom:12px}
-.brand{font-family:var(--f-display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)}
-h1{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1.05;margin:0;letter-spacing:.005em}
-.lede{margin:0;color:var(--muted);font-size:13.5px}
+.brand{font-family:var(--f-display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1.05;margin:0;letter-spacing:.005em}
+.lede{margin:0;color:var(--muted);font-size:15px}
 .grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr);gap:14px;align-items:stretch}
 @media (max-width:760px){.grid{grid-template-columns:1fr}}
 .col{display:flex;flex-direction:column;gap:10px;min-width:0}
 
-.step{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px 14px}
+.step{container-type:inline-size;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px 14px}
 .step-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
-.step-no{font-family:var(--f-display);font-weight:700;font-size:13px;color:var(--hivis-ink);background:var(--hivis);width:22px;height:22px;display:grid;place-items:center;border-radius:3px;flex:none}
-.step h2{font-family:var(--f-display);font-weight:600;font-size:18px;margin:0;letter-spacing:.01em}
-.step-sub{color:var(--muted);font-size:12.5px}
+.step-no{font-family:var(--f-display);font-weight:700;font-size:15px;color:var(--hivis-ink);background:var(--hivis);width:25px;height:25px;display:grid;place-items:center;border-radius:3px;flex:none}
+.step h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0;letter-spacing:.01em}
+.step-sub{color:var(--muted);font-size:14.5px}
 .step-head .push{margin-left:auto}
-.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px 12px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 12px}
 .fields.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .fields.five{grid-template-columns:repeat(5,minmax(0,1fr))}
 .fields.four{grid-template-columns:repeat(4,minmax(0,1fr))}
 .fields.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@container (max-width:560px){.tol{grid-template-columns:1fr!important}.fields.five{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media (max-width:899px) and (min-width:761px),(max-width:560px){.fields.five{grid-template-columns:repeat(3,minmax(0,1fr))}.fields.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:420px){.fields.two{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;min-width:0}
-.lbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px;position:relative;min-height:15px}
-.inp{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:4px;background:var(--bg);overflow:hidden;height:34px}
+.lbl{font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px;position:relative;min-height:17px}
+.inp{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:4px;background:var(--bg);overflow:hidden;height:40px}
 .inp:focus-within{outline:2px solid var(--hivis);outline-offset:1px}
-.inp span{font-family:var(--f-data);font-size:12px;color:var(--muted);padding:0 8px;display:grid;place-items:center;background:var(--panel);white-space:nowrap}
-.inp input,.inp select{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--f-data);font-size:14px;padding:0 8px;outline:none}
-.inp select{font-family:var(--f-body);font-size:13px}
+.inp span{font-family:var(--f-data);font-size:13.5px;color:var(--muted);padding:0 8px;display:grid;place-items:center;background:var(--panel);white-space:nowrap}
+.inp input,.inp select{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--f-data);font-size:16.5px;padding:0 9px;outline:none}
+.inp select{font-family:var(--f-body);font-size:15.5px}
 .field.off{opacity:.45}
 
 /* info tips: absolutely positioned so they never change the block height */
-.info{all:unset;cursor:help;width:15px;height:15px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font:600 10px/13px var(--f-body);text-align:center;flex:none;text-transform:none;letter-spacing:0}
+.info{all:unset;cursor:help;width:17px;height:17px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font:600 11px/15px var(--f-body);text-align:center;flex:none;text-transform:none;letter-spacing:0}
 .info:focus-visible{outline:2px solid var(--hivis);outline-offset:1px}
-.tip{display:none;position:absolute;top:20px;left:0;z-index:5;width:min(280px,80vw);background:var(--ink);color:var(--panel);font:400 12.5px/1.4 var(--f-body);text-transform:none;letter-spacing:0;padding:8px 10px;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.tip{display:none;position:absolute;top:20px;left:0;z-index:5;width:min(280px,80vw);background:var(--ink);color:var(--panel);font:400 14px/1.45 var(--f-body);text-transform:none;letter-spacing:0;padding:9px 11px;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .info:hover + .tip,.info:focus + .tip{display:block}
 
 .slider{min-width:0}
 .slider-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.slider-val{font-family:var(--f-data);font-weight:500;font-size:15px;white-space:nowrap}
+.slider-val{font-family:var(--f-data);font-weight:500;font-size:18px;white-space:nowrap}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:2px 0 0}
 input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--hivis) 0 var(--p,50%),var(--track) var(--p,50%) 100%)}
 input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--track)}
@@ -69,61 +70,61 @@ input[type=range]::-moz-range-progress{height:6px;border-radius:3px;background:v
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--panel);border:3px solid var(--hivis);margin-top:-6px;cursor:pointer}
 input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--panel);border:3px solid var(--hivis);cursor:pointer}
 input[type=range]:focus-visible{outline:2px solid var(--hivis);outline-offset:2px}
-.scale{display:flex;justify-content:space-between;font-family:var(--f-data);font-size:11px;color:var(--muted)}
+.scale{display:flex;justify-content:space-between;font-family:var(--f-data);font-size:12.5px;color:var(--muted)}
 
 .tol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:end}
 @media (max-width:520px){.tol{grid-template-columns:1fr}}
 .bands{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .band{font-family:var(--f-body);border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px;padding:5px 4px;cursor:pointer;text-align:center;line-height:1.2}
-.band b{display:block;font-family:var(--f-display);font-size:15px;font-weight:600}
-.band small{font-family:var(--f-data);font-size:11px;color:var(--muted)}
+.band b{display:block;font-family:var(--f-display);font-size:18px;font-weight:600}
+.band small{font-family:var(--f-data);font-size:12.5px;color:var(--muted)}
 .band[aria-pressed="true"]{border-color:var(--hivis);box-shadow:inset 0 0 0 1px var(--hivis);background:var(--panel)}
 .band:focus-visible{outline:2px solid var(--hivis);outline-offset:2px}
 
-.toggle{display:flex;gap:7px;align-items:center;cursor:pointer;font-weight:600;font-size:13px}
-.toggle input{width:16px;height:16px;accent-color:var(--hivis);margin:0}
+.toggle{display:flex;gap:7px;align-items:center;cursor:pointer;font-weight:600;font-size:15px}
+.toggle input{width:18px;height:18px;accent-color:var(--hivis);margin:0}
 
 /* Results */
 .results{background:var(--road);color:var(--road-ink);border-radius:6px;padding:0 16px 14px;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .stripe{height:7px;margin:0 -16px 10px;background:repeating-linear-gradient(-45deg,var(--hivis) 0 12px,var(--road) 12px 24px)}
 .tabs{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,.14)}
-.tab{all:unset;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--road-muted);padding:6px 8px 7px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab{all:unset;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:16.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--road-muted);padding:6px 8px 7px;border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab[aria-selected="true"]{color:var(--road-ink);border-bottom-color:var(--hivis)}
 .tab:focus-visible{outline:2px solid var(--hivis)}
 .panes{display:grid;flex:1}
 .pane{grid-area:1/1;min-width:0}
 .pane.inactive{visibility:hidden}
 .results .lbl{color:var(--road-muted)}
-.big{font-family:var(--f-display);font-weight:700;font-size:46px;line-height:1;margin:4px 0 2px;font-variant-numeric:tabular-nums}
-.sub{color:var(--road-muted);font-size:13px;min-height:2.9em}
+.big{font-family:var(--f-display);font-weight:700;font-size:56px;line-height:1;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.sub{color:var(--road-muted);font-size:15px;min-height:2.9em}
 .kv{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;margin:10px 0}
 .kv div{background:var(--road);padding:7px 10px;min-width:0}
-.kv b{display:block;font-family:var(--f-data);font-weight:500;font-size:15px;font-variant-numeric:tabular-nums;color:var(--road-ink)}
-.kv span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--road-muted)}
+.kv b{display:block;font-family:var(--f-data);font-weight:500;font-size:18px;font-variant-numeric:tabular-nums;color:var(--road-ink)}
+.kv span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--road-muted)}
 .crash{border:1px solid var(--hivis);border-radius:4px;padding:8px 10px;margin:0 0 10px;display:flex;gap:4px 12px;align-items:baseline;flex-wrap:wrap}
-.crash b{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1;color:var(--hivis);font-variant-numeric:tabular-nums}
-.crash span{font-size:12.5px;color:var(--road-muted);flex:1 1 180px}
-.verdict{display:flex;gap:8px;align-items:flex-start;border-radius:4px;padding:8px 10px;font-size:13px;margin-bottom:10px;background:rgba(255,255,255,.06);min-height:62px}
-.pill{font-family:var(--f-display);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex:none;margin-top:1px}
+.crash b{font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1;color:var(--hivis);font-variant-numeric:tabular-nums}
+.crash span{font-size:14.5px;color:var(--road-muted);flex:1 1 180px}
+.verdict{display:flex;gap:8px;align-items:flex-start;border-radius:4px;padding:9px 11px;font-size:15px;margin-bottom:10px;background:rgba(255,255,255,.06);min-height:70px}
+.pill{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex:none;margin-top:1px}
 .pill.good{background:var(--good);color:#fff}.pill.warn{background:var(--warn);color:#fff}
 .bars{display:flex;flex-direction:column;gap:6px;margin-top:5px}
-.bar-row{display:grid;grid-template-columns:96px 1fr 78px;gap:8px;align-items:center;font-size:12.5px}
+.bar-row{display:grid;grid-template-columns:112px 1fr 92px;gap:8px;align-items:center;font-size:14.5px}
 .bar-row .name{color:var(--road-muted)}
 .bar-row .amt{font-family:var(--f-data);text-align:right;font-variant-numeric:tabular-nums}
-.bar-track{position:relative;height:12px;background:rgba(255,255,255,.08);border-radius:2px}
+.bar-track{position:relative;height:14px;background:rgba(255,255,255,.08);border-radius:2px}
 .bar-fill{position:absolute;inset:0 auto 0 0;background:var(--hivis);border-radius:2px;transition:width .25s}
 .bar-fill.cost{background:var(--road-muted)}
 .bar-row.sel .name{color:var(--road-ink);font-weight:600}
 @media (prefers-reduced-motion:reduce){.bar-fill{transition:none}}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
-button.btn{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:4px;padding:7px 12px;cursor:pointer;background:var(--hivis);color:var(--hivis-ink)}
+button.btn{font-family:var(--f-display);font-weight:600;font-size:16px;letter-spacing:.04em;text-transform:uppercase;border:0;border-radius:4px;padding:8px 14px;cursor:pointer;background:var(--hivis);color:var(--hivis-ink)}
 button.btn.ghost{background:transparent;color:var(--road-ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
 button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
-.copied{font-size:12.5px;color:var(--road-muted)}
+.copied{font-size:14px;color:var(--road-muted)}
 .math ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
-.math li{font-size:13px;color:var(--road-ink)}
-.math code{font-family:var(--f-data);font-size:12px;background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;overflow-wrap:anywhere}
-.fine{font-size:12px;color:var(--road-muted);margin:12px 0 0}
+.math li{font-size:15px;color:var(--road-ink)}
+.math code{font-family:var(--f-data);font-size:13.5px;background:rgba(255,255,255,.08);padding:1px 4px;border-radius:3px;overflow-wrap:anywhere}
+.fine{font-size:13.5px;color:var(--road-muted);margin:12px 0 0}
 </style>
 </head>
 <body>
@@ -150,17 +151,17 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
       <section class="step">
         <div class="step-head"><div class="step-no">2</div><h2>Your driving events</h2><span class="step-sub" id="telemSub"></span></div>
         <div class="fields two" style="margin-bottom:10px">
-          <div class="field"><label class="lbl" for="events">Harsh braking + acceleration</label><div class="inp"><input id="events" type="number" min="0" step="0.1" inputmode="decimal"></div></div>
+          <div class="field"><label class="lbl" for="events">Harsh events</label><div class="inp"><input id="events" type="number" min="0" step="0.1" inputmode="decimal"></div></div>
           <div class="field"><label class="lbl" for="unit">Reported as</label><div class="inp"><select id="unit"><option value="day">per truck per day</option><option value="k" id="unitK"></option></select></div></div>
         </div>
         <div class="fields two">
           <div class="slider">
-            <div class="slider-top"><span class="lbl" id="galLbl">Fuel lost per event <button class="info" type="button" aria-label="About fuel lost per event">i</button><span class="tip" role="tooltip" id="galTip"></span></span><span class="slider-val" id="galOut"></span></div>
+            <div class="slider-top"><span class="lbl" id="galLbl">Fuel / event <button class="info" type="button" aria-label="About fuel lost per event">i</button><span class="tip" role="tooltip" id="galTip"></span></span><span class="slider-val" id="galOut"></span></div>
             <input id="gal" type="range" aria-labelledby="galLbl">
             <div class="scale"><span id="galMin"></span><span id="galMax"></span></div>
           </div>
           <div class="slider">
-            <div class="slider-top"><span class="lbl" id="shareLbl">Share linked to fatigue <button class="info" type="button" aria-label="About fatigue share">i</button><span class="tip" role="tooltip">If you can compare events on late or long shifts against rested shifts, use that. Otherwise pick a share you'd defend.</span></span><span class="slider-val" id="shareOut"></span></div>
+            <div class="slider-top"><span class="lbl" id="shareLbl">Fatigue share <button class="info" type="button" aria-label="About fatigue share">i</button><span class="tip" role="tooltip">If you can compare events on late or long shifts against rested shifts, use that. Otherwise pick a share you'd defend.</span></span><span class="slider-val" id="shareOut"></span></div>
             <input id="share" type="range" min="10" max="70" step="5" aria-labelledby="shareLbl">
             <div class="scale"><span>10%</span><span>70%</span></div>
           </div>
@@ -176,7 +177,7 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
             <button class="band" type="button" data-min="30" data-max="45" id="bandA"><b>Confident</b><small>30–45%</small></button>
           </div>
           <div class="slider">
-            <div class="slider-top"><span class="lbl" id="redLbl">Reduction you'll stand behind</span><span class="slider-val" id="redOut"></span></div>
+            <div class="slider-top"><span class="lbl" id="redLbl">Your reduction</span><span class="slider-val" id="redOut"></span></div>
             <input id="red" type="range" min="15" max="30" step="1" aria-labelledby="redLbl">
             <div class="scale"><span id="redMin"></span><span id="redMax"></span></div>
           </div>
@@ -186,7 +187,7 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
       <section class="step">
         <div class="step-head"><div class="step-no">4</div><h2>Investment and other savings</h2><label class="toggle push"><input type="checkbox" id="incOn"> Include incident avoidance</label></div>
         <div class="fields four">
-          <div class="field"><label class="lbl" for="drivers">Drivers assessed</label><div class="inp"><input id="drivers" type="number" min="0" inputmode="numeric"></div></div>
+          <div class="field"><label class="lbl" for="drivers">Drivers</label><div class="inp"><input id="drivers" type="number" min="0" inputmode="numeric"></div></div>
           <div class="field"><label class="lbl" for="ppm" id="ppmLbl"></label><div class="inp"><input id="ppm" type="number" min="0" step="0.5" inputmode="decimal"></div></div>
           <div class="field inc"><label class="lbl" for="inc">Incidents / yr</label><div class="inp"><input id="inc" type="number" min="0" inputmode="numeric"></div></div>
           <div class="field inc"><label class="lbl" for="incCost" id="incCostLbl"></label><div class="inp"><input id="incCost" type="number" min="0" step="1000" inputmode="numeric"></div></div>
@@ -246,7 +247,7 @@ const REGION = "AU";
 const CFG = {
   US:{ locale:"en-US", cur:"", brand:"SafetyIQ · Fatigue Risk Management", title:"Fatigue Fuel Recovery Calculator",
     lede:"Enter your own numbers, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
-    dist:"mi", distLong:"Miles / day", econLbl:"Fleet MPG", econU:"mpg", mode:"mpg", priceLbl:"Fuel $ / gal", priceU:"",
+    dist:"mi", distLong:"Miles / day", econLbl:"Fleet MPG", econU:"mpg", mode:"mpg", priceLbl:"$ / gal", priceU:"",
     vol:"gal", volLbl:"Gallons recovered / yr", gainLbl:"Fleet MPG improvement",
     telem:"From Samsara, Motive, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a Class 8 stop-and-restart cycle at 0.25–0.50 gal. Pickups and light-duty trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
@@ -254,7 +255,7 @@ const CFG = {
     def:{trucks:100,miles:450,days:260,mpg:6.5,price:3.75,events:6,unit:"day",share:40,red:20,drivers:100,ppm:20,inc:6,incCost:35000,crash:375000,sir:2000000,margin:7,incOn:false}},
   AU:{ locale:"en-AU", cur:" (AUD)", brand:"SafetyIQ · Fatigue Risk Management · Australia", title:"Fatigue Fuel Recovery Calculator",
     lede:"Enter your own numbers in kilometres, litres and AUD, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
-    dist:"km", distLong:"Km / day", econLbl:"L / 100 km", econU:"L/100 km", mode:"l100", priceLbl:"Diesel $ / L", priceU:"",
+    dist:"km", distLong:"Km / day", econLbl:"L / 100 km", econU:"L/100 km", mode:"l100", priceLbl:"$ / L", priceU:"",
     vol:"L", volLbl:"Litres recovered / yr", gainLbl:"Fleet fuel use reduction",
     telem:"From Teletrac Navman, MTData, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a heavy prime mover stop-and-restart cycle at roughly 0.95–1.9 L. Utes and light rigid trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
@@ -270,7 +271,7 @@ const CFG = {
   T("priceLbl",CFG.priceLbl);  T("telemSub",CFG.telem); T("unitK","per 1,000 "+CFG.dist);
   T("galTip",CFG.galTip); T("volLbl",CFG.volLbl); T("gainLbl",CFG.gainLbl);
   T("ppmLbl","$ / driver / mo"); T("incCostLbl","$ / incident");
-  T("crashLbl","Crash cost $"+(CFG.cur?" AUD":"")); T("sirLbl","Self-insured up to $"); T("headLbl","Annual savings at your chosen gain"+CFG.cur);
+  T("crashLbl","Crash cost $"); T("sirLbl","Self-insured to $"); T("headLbl","Annual savings at your chosen gain"+CFG.cur);
   const g=$("gal"); g.min=CFG.gal.min; g.max=CFG.gal.max; g.step=CFG.gal.step;
   T("galMin",CFG.gal.min+" "+CFG.vol); T("galMax",CFG.gal.max+" "+CFG.vol);
 
