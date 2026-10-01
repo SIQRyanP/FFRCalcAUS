@@ -53,9 +53,6 @@ h1{font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1.05;
 .inp input,.inp select{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font-family:var(--f-data);font-size:16.5px;padding:0 9px;outline:none}
 .inp select{font-family:var(--f-body);font-size:15.5px}
 .field.off{opacity:.45}
-.inp input[readonly]{color:var(--ink);font-weight:500;cursor:default}
-.inp.calc{background:var(--panel);border-style:dashed}
-.tier{margin:8px 0 0;font-size:13.5px;color:var(--muted);font-family:var(--f-data)}
 
 /* info tips: absolutely positioned so they never change the block height */
 .info{all:unset;cursor:help;width:17px;height:17px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font:600 11px/15px var(--f-body);text-align:center;flex:none;text-transform:none;letter-spacing:0}
@@ -189,14 +186,12 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
 
       <section class="step">
         <div class="step-head"><div class="step-no">4</div><h2>Investment and other savings</h2><label class="toggle push"><input type="checkbox" id="incOn"> Include incident avoidance</label></div>
-        <div class="fields five">
-          <div class="field"><label class="lbl" for="drivers">Drivers assessed</label><div class="inp"><input id="drivers" type="number" min="0" inputmode="numeric"></div></div>
-          <div class="field"><label class="lbl" for="plan">Package</label><div class="inp"><select id="plan"></select></div></div>
-          <div class="field"><label class="lbl" for="ppm" id="ppmLbl"></label><div class="inp" id="ppmBox"><input id="ppm" type="number" min="0" step="0.01" inputmode="decimal"></div></div>
+        <div class="fields four">
+          <div class="field"><label class="lbl" for="drivers">Drivers</label><div class="inp"><input id="drivers" type="number" min="0" inputmode="numeric"></div></div>
+          <div class="field"><label class="lbl" for="ppm" id="ppmLbl"></label><div class="inp"><input id="ppm" type="number" min="0" step="0.5" inputmode="decimal"></div></div>
           <div class="field inc"><label class="lbl" for="inc">Incidents / yr</label><div class="inp"><input id="inc" type="number" min="0" inputmode="numeric"></div></div>
           <div class="field inc"><label class="lbl" for="incCost" id="incCostLbl"></label><div class="inp"><input id="incCost" type="number" min="0" step="1000" inputmode="numeric"></div></div>
         </div>
-        <p class="tier" id="tierLine"></p>
       </section>
 
       <section class="step">
@@ -249,14 +244,6 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
 
 <script>
 const REGION = "AU";
-// SafetyIQ JESI bundle price book (annual list, flat fee per driver band). 30,000+ is quote-only.
-const BANDS = [[0,149],[150,299],[300,499],[500,749],[750,999],[1000,1499],[1500,1999],[2000,2999],[3000,4999],[5000,7499],[7500,9999],[10000,14999],[15000,19999],[20000,29999]];
-const BOOK_USD = {
-  ignition:{name:"Ignition", desc:"Journey management + psychomotor assessment",
-    p:[26200,33300,42476,54096,68970,87862,112103,142904,182280,232575,296794,378843,483679,617674]},
-  vanguard:{name:"Vanguard", desc:"Journey management + psychomotor assessment + lone worker",
-    p:[32032,40590,51589,65488,83210,105661,134353,170716,217045,276032,351115,446744,568555,723770]}
-};
 const CFG = {
   US:{ locale:"en-US", cur:"", brand:"SafetyIQ · Fatigue Risk Management", title:"Fatigue Fuel Recovery Calculator",
     lede:"Enter your own numbers, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
@@ -265,7 +252,7 @@ const CFG = {
     telem:"From Samsara, Motive, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a Class 8 stop-and-restart cycle at 0.25–0.50 gal. Pickups and light-duty trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
     gal:{min:0.05,max:0.5,step:0.05,val:0.25},
-    book:BOOK_USD, def:{plan:"ignition",trucks:100,miles:450,days:260,mpg:6.5,price:3.75,events:6,unit:"day",share:40,red:20,drivers:100,ppm:20,inc:6,incCost:35000,crash:375000,sir:2000000,margin:7,incOn:false}},
+    def:{trucks:100,miles:450,days:260,mpg:6.5,price:3.75,events:6,unit:"day",share:40,red:20,drivers:100,ppm:20,inc:6,incCost:35000,crash:375000,sir:2000000,margin:7,incOn:false}},
   AU:{ locale:"en-AU", cur:" (AUD)", brand:"SafetyIQ · Fatigue Risk Management · Australia", title:"Fatigue Fuel Recovery Calculator",
     lede:"Enter your own numbers in kilometres, litres and AUD, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
     dist:"km", distLong:"Km / day", econLbl:"L / 100 km", econU:"L/100 km", mode:"l100", priceLbl:"$ / L", priceU:"",
@@ -273,7 +260,7 @@ const CFG = {
     telem:"From Teletrac Navman, MTData, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a heavy prime mover stop-and-restart cycle at roughly 0.95–1.9 L. Utes and light rigid trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
     gal:{min:0.2,max:1.9,step:0.05,val:0.95},
-    book:null, def:{plan:"custom",trucks:100,miles:725,days:260,mpg:45,price:1.95,events:6,unit:"day",share:40,red:20,drivers:100,ppm:30,inc:6,incCost:50000,crash:375000,sir:2000000,margin:7,incOn:false}}
+    def:{trucks:100,miles:725,days:260,mpg:45,price:1.95,events:6,unit:"day",share:40,red:20,drivers:100,ppm:30,inc:6,incCost:50000,crash:375000,sir:2000000,margin:7,incOn:false}}
 }[REGION];
 
 (function(){
@@ -291,22 +278,8 @@ const CFG = {
   const ids = ["trucks","miles","days","mpg","price","events","unit","share","red","drivers","ppm","inc","incCost","crash","sir","margin"];
   let band = {min:15,max:30}; let driversTouched = false;
 
-  const planSel = $("plan");
-  if(CFG.book) Object.entries(CFG.book).forEach(([k,b])=>{ const o=document.createElement("option"); o.value=k; o.textContent=b.name; o.title=b.desc; planSel.appendChild(o); });
-  { const o=document.createElement("option"); o.value="custom"; o.textContent="Custom rate"; planSel.appendChild(o); }
-
-  function price(x){
-    const b = CFG.book && CFG.book[x.plan];
-    if(!b || !x.drivers) return {annual:x.drivers*x.ppm*12, ppm:x.ppm, tier:0};
-    let i = BANDS.findIndex(([lo,hi]) => x.drivers>=lo && x.drivers<=hi); const over = i<0;
-    if(over) i = BANDS.length-1;
-    const annual = b.p[i];
-    return {annual, ppm: annual/x.drivers/12, tier:i+1, over, name:b.name, desc:b.desc,
-      band: fmt(BANDS[i][0])+"–"+fmt(BANDS[i][1])};
-  }
-
   function loadDefaults(){
-    ids.forEach(i => $(i).value = CFG.def[i]); planSel.value = CFG.def.plan;
+    ids.forEach(i => $(i).value = CFG.def[i]);
     $("gal").value = CFG.gal.val; $("incOn").checked = CFG.def.incOn; driversTouched=false;
   }
 
@@ -319,7 +292,7 @@ const CFG = {
   function inputs(){
     return { trucks:v("trucks"), miles:v("miles"), days:v("days"), econ:v("mpg"), price:v("price"),
       events:v("events"), unit:$("unit").value, gal:parseFloat($("gal").value), share:parseFloat($("share").value)/100,
-      red:parseFloat($("red").value)/100, drivers:v("drivers"), ppm:v("ppm"), plan:$("plan").value,
+      red:parseFloat($("red").value)/100, drivers:v("drivers"), ppm:v("ppm"),
       incOn:$("incOn").checked, inc:v("inc"), incCost:v("incCost"), crash:v("crash"), sir:v("sir"), margin:v("margin")/100 };
   }
 
@@ -336,7 +309,7 @@ const CFG = {
     const total = fuel + incident;
     const newVol = baseVol - savedVol;
     const gain = CFG.mode==="mpg" ? (newVol>0 ? baseVol/newVol - 1 : 0) : (baseVol>0 ? savedVol/baseVol : 0);
-    const invest = price(x).annual;
+    const invest = x.drivers*x.ppm*12;
     return {dist, baseVol, baseCost:baseVol*x.price, evPerTruckDay, annualEvents, fatigueEvents, wasteVol,
       savedVol, fuel, incident, total, gain, invest, avoided:fatigueEvents*red, roi: invest ? (total-invest)/invest : 0};
   }
@@ -348,11 +321,6 @@ const CFG = {
     T("redMin", band.min+"%"); T("redMax", band.max+"%");
     document.querySelectorAll(".field.inc").forEach(f=>{ f.classList.toggle("off", !$("incOn").checked); f.querySelector("input").disabled = !$("incOn").checked; });
 
-    { const x0 = inputs(), pr = price(x0), custom = !pr.tier;
-      $("ppm").readOnly = !custom; $("ppmBox").classList.toggle("calc", !custom);
-      if(!custom) $("ppm").value = pr.ppm.toFixed(2);
-      T("tierLine", custom ? (CFG.book ? "Custom rate: enter your quoted price per driver per month." : "Enter the quoted price per driver per month"+CFG.cur+".")
-        : pr.name+" price book · tier "+pr.tier+" ("+pr.band+" drivers) · "+money(pr.annual)+" / yr"+(pr.over?" · 30,000+ is quoted individually":"")); }
     const x = inputs(), m = model(x, x.red), lo = model(x, band.min/100), hi = model(x, band.max/100);
     const V = CFG.vol, D = CFG.dist, pct = Math.round(x.red*100);
 
@@ -396,9 +364,7 @@ const CFG = {
       "Recovered: <code>"+fmt(m.wasteVol)+" "+V+" × "+pct+"% = "+fmt(m.savedVol)+" "+V+" × $"+fmt(x.price,2)+" = "+money(m.fuel)+"</code>"];
     if(x.incOn) L.push("Incidents: <code>"+fmt(x.inc)+" × "+money(x.incCost)+" × "+pct+"% = "+money(m.incident)+"</code>");
     L.push("Crash offset: <code>"+money(retained)+" self-insured loss ÷ "+fmt(x.margin*100,1)+"% margin = "+money(crashRev)+" revenue</code>");
-    const pr = price(x);
-    L.push(pr.tier ? "Investment: <code>"+pr.name+" tier "+pr.tier+" ("+pr.band+") = "+money(pr.annual)+" / yr ÷ "+fmt(x.drivers)+" drivers ÷ 12 = $"+fmt(pr.ppm,2)+" / driver / mo</code>"
-                   : "Investment: <code>"+fmt(x.drivers)+" drivers × $"+fmt(x.ppm,2)+" × 12 = "+money(m.invest)+"</code>");
+    L.push("Investment: <code>"+fmt(x.drivers)+" drivers × $"+fmt(x.ppm,2)+" × 12 = "+money(m.invest)+"</code>");
     $("mathList").innerHTML = L.map(s=>"<li>"+s+"</li>").join("");
 
     window.__summary = [
@@ -428,7 +394,6 @@ const CFG = {
     update();
   }));
   $("unit").addEventListener("change", update);
-  planSel.addEventListener("change", update);
   $("incOn").addEventListener("change", update);
 
   function selectTab(which){
