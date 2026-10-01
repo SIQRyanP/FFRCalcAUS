@@ -26,7 +26,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1
 header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin-bottom:12px}
 .brand{font-family:var(--f-display);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--muted)}
 h1{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1.05;margin:0;letter-spacing:.005em}
-.lede{flex-basis:100%;margin:0;color:var(--muted);font-size:13.5px}
+.lede{margin:0;color:var(--muted);font-size:13.5px}
 .grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr);gap:14px;align-items:stretch}
 @media (max-width:760px){.grid{grid-template-columns:1fr}}
 .col{display:flex;flex-direction:column;gap:10px;min-width:0}
@@ -41,6 +41,7 @@ h1{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1.05;
 .fields.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .fields.five{grid-template-columns:repeat(5,minmax(0,1fr))}
 .fields.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.fields.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:899px) and (min-width:761px),(max-width:560px){.fields.five{grid-template-columns:repeat(3,minmax(0,1fr))}.fields.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:420px){.fields.two{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;justify-content:flex-end;gap:4px;min-width:0}
@@ -99,6 +100,9 @@ input[type=range]:focus-visible{outline:2px solid var(--hivis);outline-offset:2p
 .kv div{background:var(--road);padding:7px 10px;min-width:0}
 .kv b{display:block;font-family:var(--f-data);font-weight:500;font-size:15px;font-variant-numeric:tabular-nums;color:var(--road-ink)}
 .kv span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--road-muted)}
+.crash{border:1px solid var(--hivis);border-radius:4px;padding:8px 10px;margin:0 0 10px;display:flex;gap:4px 12px;align-items:baseline;flex-wrap:wrap}
+.crash b{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1;color:var(--hivis);font-variant-numeric:tabular-nums}
+.crash span{font-size:12.5px;color:var(--road-muted);flex:1 1 180px}
 .verdict{display:flex;gap:8px;align-items:flex-start;border-radius:4px;padding:8px 10px;font-size:13px;margin-bottom:10px;background:rgba(255,255,255,.06);min-height:62px}
 .pill{font-family:var(--f-display);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex:none;margin-top:1px}
 .pill.good{background:var(--good);color:#fff}.pill.warn{background:var(--warn);color:#fff}
@@ -146,7 +150,7 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
       <section class="step">
         <div class="step-head"><div class="step-no">2</div><h2>Your driving events</h2><span class="step-sub" id="telemSub"></span></div>
         <div class="fields two" style="margin-bottom:10px">
-          <div class="field"><label class="lbl" for="events">Harsh braking + acceleration events</label><div class="inp"><input id="events" type="number" min="0" step="0.1" inputmode="decimal"></div></div>
+          <div class="field"><label class="lbl" for="events">Harsh braking + acceleration</label><div class="inp"><input id="events" type="number" min="0" step="0.1" inputmode="decimal"></div></div>
           <div class="field"><label class="lbl" for="unit">Reported as</label><div class="inp"><select id="unit"><option value="day">per truck per day</option><option value="k" id="unitK"></option></select></div></div>
         </div>
         <div class="fields two">
@@ -164,7 +168,7 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
       </section>
 
       <section class="step">
-        <div class="step-head"><div class="step-no">3</div><h2>Your efficiency gain</h2><span class="step-sub">How much fatigue-linked waste would managing fatigue remove?</span></div>
+        <div class="step-head"><div class="step-no">3</div><h2>Your efficiency gain</h2><span class="step-sub">Share of fatigue-linked waste removed.</span></div>
         <div class="tol">
           <div class="bands" role="group" aria-label="Tolerance range">
             <button class="band" type="button" data-min="5" data-max="15" id="bandC"><b>Cautious</b><small>5–15%</small></button>
@@ -188,6 +192,15 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
           <div class="field inc"><label class="lbl" for="incCost" id="incCostLbl"></label><div class="inp"><input id="incCost" type="number" min="0" step="1000" inputmode="numeric"></div></div>
         </div>
       </section>
+
+      <section class="step">
+        <div class="step-head"><div class="step-no">5</div><h2>Cost of one serious crash</h2><span class="step-sub">Revenue needed to earn back a self-insured loss.</span></div>
+        <div class="fields three">
+          <div class="field"><label class="lbl" for="crash" id="crashLbl">Crash cost $</label><div class="inp"><input id="crash" type="number" min="0" step="5000" inputmode="numeric"></div></div>
+          <div class="field"><label class="lbl" for="sir" id="sirLbl">Self-insured up to $</label><div class="inp"><input id="sir" type="number" min="0" step="50000" inputmode="numeric"></div></div>
+          <div class="field"><label class="lbl" for="margin">Profit margin</label><div class="inp"><input id="margin" type="number" min="0.1" max="100" step="0.5" inputmode="decimal"><span>%</span></div></div>
+        </div>
+      </section>
     </div>
 
     <aside class="results" aria-live="polite">
@@ -209,6 +222,7 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
             <div><b id="invest">$0</b><span>Annual investment</span></div>
             <div><b id="roi">0%</b><span>Net ROI</span></div>
           </div>
+          <div class="crash"><b id="crashRev">$0</b><span id="crashTxt"></span></div>
           <div class="verdict"><span class="pill" id="vPill">—</span><span id="vText"></span></div>
           <div class="lbl">Savings across your range vs. investment</div>
           <div class="bars" id="bars"></div>
@@ -231,21 +245,21 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
 const REGION = "AU";
 const CFG = {
   US:{ locale:"en-US", cur:"", brand:"SafetyIQ · Fatigue Risk Management", title:"Fatigue Fuel Recovery Calculator",
-    lede:"Enter your own fleet and telematics numbers, then choose the efficiency gain you're comfortable standing behind. Example values are placeholders to replace.",
+    lede:"Enter your own numbers, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
     dist:"mi", distLong:"Miles / day", econLbl:"Fleet MPG", econU:"mpg", mode:"mpg", priceLbl:"Fuel $ / gal", priceU:"",
     vol:"gal", volLbl:"Gallons recovered / yr", gainLbl:"Fleet MPG improvement",
     telem:"From Samsara, Motive, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a Class 8 stop-and-restart cycle at 0.25–0.50 gal. Pickups and light-duty trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
     gal:{min:0.05,max:0.5,step:0.05,val:0.25},
-    def:{trucks:100,miles:450,days:260,mpg:6.5,price:3.75,events:6,unit:"day",share:40,red:20,drivers:100,ppm:20,inc:6,incCost:35000,incOn:false}},
+    def:{trucks:100,miles:450,days:260,mpg:6.5,price:3.75,events:6,unit:"day",share:40,red:20,drivers:100,ppm:20,inc:6,incCost:35000,crash:375000,sir:2000000,margin:7,incOn:false}},
   AU:{ locale:"en-AU", cur:" (AUD)", brand:"SafetyIQ · Fatigue Risk Management · Australia", title:"Fatigue Fuel Recovery Calculator",
-    lede:"Enter your own fleet and telematics numbers in kilometres, litres and AUD, then choose the efficiency gain you're comfortable standing behind. Example values are placeholders to replace.",
+    lede:"Enter your own numbers in kilometres, litres and AUD, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
     dist:"km", distLong:"Km / day", econLbl:"L / 100 km", econU:"L/100 km", mode:"l100", priceLbl:"Diesel $ / L", priceU:"",
     vol:"L", volLbl:"Litres recovered / yr", gainLbl:"Fleet fuel use reduction",
     telem:"From Teletrac Navman, MTData, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a heavy prime mover stop-and-restart cycle at roughly 0.95–1.9 L. Utes and light rigid trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
     gal:{min:0.2,max:1.9,step:0.05,val:0.95},
-    def:{trucks:100,miles:725,days:260,mpg:45,price:1.95,events:6,unit:"day",share:40,red:20,drivers:100,ppm:30,inc:6,incCost:50000,incOn:false}}
+    def:{trucks:100,miles:725,days:260,mpg:45,price:1.95,events:6,unit:"day",share:40,red:20,drivers:100,ppm:30,inc:6,incCost:50000,crash:375000,sir:2000000,margin:7,incOn:false}}
 }[REGION];
 
 (function(){
@@ -256,11 +270,11 @@ const CFG = {
   T("priceLbl",CFG.priceLbl);  T("telemSub",CFG.telem); T("unitK","per 1,000 "+CFG.dist);
   T("galTip",CFG.galTip); T("volLbl",CFG.volLbl); T("gainLbl",CFG.gainLbl);
   T("ppmLbl","$ / driver / mo"); T("incCostLbl","$ / incident");
-  T("headLbl","Annual savings at your chosen gain"+CFG.cur);
+  T("crashLbl","Crash cost $"+(CFG.cur?" AUD":"")); T("sirLbl","Self-insured up to $"); T("headLbl","Annual savings at your chosen gain"+CFG.cur);
   const g=$("gal"); g.min=CFG.gal.min; g.max=CFG.gal.max; g.step=CFG.gal.step;
   T("galMin",CFG.gal.min+" "+CFG.vol); T("galMax",CFG.gal.max+" "+CFG.vol);
 
-  const ids = ["trucks","miles","days","mpg","price","events","unit","share","red","drivers","ppm","inc","incCost"];
+  const ids = ["trucks","miles","days","mpg","price","events","unit","share","red","drivers","ppm","inc","incCost","crash","sir","margin"];
   let band = {min:15,max:30}; let driversTouched = false;
 
   function loadDefaults(){
@@ -269,6 +283,7 @@ const CFG = {
   }
 
   const fmt = (n,d=0) => Number(n).toLocaleString(CFG.locale,{minimumFractionDigits:d,maximumFractionDigits:d});
+  const big = n => n>=1e6 ? "$"+fmt(n/1e6, n>=1e7?1:2)+"M" : money(n);
   const money = n => (n<0?"-":"") + "$" + Math.round(Math.abs(n)).toLocaleString(CFG.locale);
   const v = id => { const x = parseFloat($(id).value); return isFinite(x) && x>0 ? x : 0; };
   const paint = r => r.style.setProperty("--p", ((r.value - r.min)/(r.max - r.min)*100)+"%");
@@ -277,7 +292,7 @@ const CFG = {
     return { trucks:v("trucks"), miles:v("miles"), days:v("days"), econ:v("mpg"), price:v("price"),
       events:v("events"), unit:$("unit").value, gal:parseFloat($("gal").value), share:parseFloat($("share").value)/100,
       red:parseFloat($("red").value)/100, drivers:v("drivers"), ppm:v("ppm"),
-      incOn:$("incOn").checked, inc:v("inc"), incCost:v("incCost") };
+      incOn:$("incOn").checked, inc:v("inc"), incCost:v("incCost"), crash:v("crash"), sir:v("sir"), margin:v("margin")/100 };
   }
 
   function model(x, red){
@@ -315,6 +330,10 @@ const CFG = {
     T("perTruck", x.trucks ? money(m.total/x.trucks) : "$0"); T("invest", money(m.invest));
     T("roi", m.invest ? fmt(m.roi*100)+"%" : "—");
 
+    const retained = Math.min(x.crash, x.sir || x.crash);
+    const crashRev = x.margin ? retained/x.margin : 0;
+    T("crashRev", big(crashRev)+" revenue");
+    T("crashTxt", "to earn back one "+money(x.crash)+" crash"+(x.crash > x.sir && x.sir ? " ("+money(retained)+" self-insured)" : "")+" at a "+fmt(x.margin*100,1)+"% margin.");
     const perFull = m.wasteVol*x.price + (x.incOn ? x.inc*x.incCost : 0);
     const be = perFull>0 ? m.invest/perFull : Infinity;
     const pill=$("vPill"), say = (cls,label,text)=>{ pill.className="pill "+cls; pill.textContent=label; T("vText",text); };
@@ -343,6 +362,7 @@ const CFG = {
       "Fatigue-linked: <code>"+fmt(m.annualEvents)+" × "+Math.round(x.share*100)+"% = "+fmt(m.fatigueEvents)+"</code> × <code>"+fmt(x.gal,2)+" "+V+" = "+fmt(m.wasteVol)+" "+V+" wasted</code>",
       "Recovered: <code>"+fmt(m.wasteVol)+" "+V+" × "+pct+"% = "+fmt(m.savedVol)+" "+V+" × $"+fmt(x.price,2)+" = "+money(m.fuel)+"</code>"];
     if(x.incOn) L.push("Incidents: <code>"+fmt(x.inc)+" × "+money(x.incCost)+" × "+pct+"% = "+money(m.incident)+"</code>");
+    L.push("Crash offset: <code>"+money(retained)+" self-insured loss ÷ "+fmt(x.margin*100,1)+"% margin = "+money(crashRev)+" revenue</code>");
     L.push("Investment: <code>"+fmt(x.drivers)+" drivers × $"+fmt(x.ppm,2)+" × 12 = "+money(m.invest)+"</code>");
     $("mathList").innerHTML = L.map(s=>"<li>"+s+"</li>").join("");
 
@@ -354,6 +374,7 @@ const CFG = {
       "Fuel recovered: "+fmt(m.savedVol)+" "+V+" / "+money(m.fuel)+" per year ("+fmt(m.gain*100,2)+"% "+CFG.gainLbl.toLowerCase()+")",
       x.incOn ? "Incident avoidance: "+money(m.incident)+" per year" : null,
       "Total annual savings: "+money(m.total)+" (range "+money(lo.total)+" to "+money(hi.total)+")",
+      "One serious crash: "+money(x.crash)+" ("+money(retained)+" self-insured) needs "+money(crashRev)+" in revenue to offset at "+fmt(x.margin*100,1)+"% margin",
       "Annual investment: "+money(m.invest)+"; net ROI "+(m.invest?fmt(m.roi*100)+"%":"n/a")+(isFinite(be)?"; break-even at "+fmt(be*100,1)+"% reduction":"")
     ].filter(Boolean).join("\n");
   }
