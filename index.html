@@ -104,7 +104,7 @@ input[type=range]:focus-visible{outline:2px solid var(--hivis);outline-offset:2p
 .crash{border:1px solid var(--hivis);border-radius:4px;padding:8px 10px;margin:0 0 10px;display:flex;gap:4px 12px;align-items:baseline;flex-wrap:wrap}
 .crash b{font-family:var(--f-display);font-weight:700;font-size:31px;line-height:1;color:var(--hivis);font-variant-numeric:tabular-nums}
 .crash span{font-size:14.5px;color:var(--road-muted);flex:1 1 180px}
-.verdict{display:flex;gap:8px;align-items:flex-start;border-radius:4px;padding:9px 11px;font-size:15px;margin-bottom:10px;background:rgba(255,255,255,.06);min-height:70px}
+.verdict{display:flex;gap:8px;align-items:flex-start;border-radius:4px;padding:9px 11px;font-size:15px;margin-bottom:10px;background:rgba(255,255,255,.06);min-height:108px}
 .pill{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex:none;margin-top:1px}
 .pill.good{background:var(--good);color:#fff}.pill.warn{background:var(--warn);color:#fff}
 .bars{display:flex;flex-direction:column;gap:6px;margin-top:5px}
@@ -222,6 +222,8 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
             <div><b id="perTruck">$0</b><span>Savings per truck / yr</span></div>
             <div><b id="invest">$0</b><span>Annual investment</span></div>
             <div><b id="roi">0%</b><span>Net ROI</span></div>
+            <div><b id="co2Avoid">0</b><span>Tonnes CO₂e avoided / yr</span></div>
+            <div><b id="co2Base">0</b><span>Fleet tonnes CO₂e / yr</span></div>
           </div>
           <div class="crash"><b id="crashRev">$0</b><span id="crashTxt"></span></div>
           <div class="verdict"><span class="pill" id="vPill">—</span><span id="vText"></span></div>
@@ -235,7 +237,7 @@ button.btn:focus-visible{outline:2px solid var(--road-ink);outline-offset:2px}
         </div>
         <div class="pane math inactive" id="paneM" role="tabpanel" aria-labelledby="tabM">
           <ol id="mathList"></ol>
-          <p class="fine">An estimate built from your own figures. It assumes fuel lost per harsh event is regained when the truck returns to speed, and that fatigue management lowers the fatigue-linked share of events by the reduction you selected. Incident avoidance uses the same reduction. Idle time, route deviation and speeding aren't counted. Actual results depend on your fleet, routes and how flagged drivers are managed.</p>
+          <p class="fine">An estimate built from your own figures. It assumes fuel lost per harsh event is regained when the truck returns to speed, and that fatigue management lowers the fatigue-linked share of events by the reduction you selected. Incident avoidance uses the same reduction. <span id="efSrc"></span> Idle time, route deviation and speeding aren't counted. Actual results depend on your fleet, routes and how flagged drivers are managed.</p>
         </div>
       </div>
     </aside>
@@ -248,7 +250,7 @@ const CFG = {
   US:{ locale:"en-US", cur:"", brand:"SafetyIQ · Fatigue Risk Management", title:"Fatigue Fuel Recovery Calculator",
     lede:"Enter your own numbers, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
     dist:"mi", distLong:"Miles / day", econLbl:"Fleet MPG", econU:"mpg", mode:"mpg", priceLbl:"$ / gal", priceU:"",
-    vol:"gal", volLbl:"Gallons recovered / yr", gainLbl:"Fleet MPG improvement",
+    vol:"gal", volLbl:"Gallons recovered / yr", gainLbl:"Fleet MPG improvement", ef:10.21, efSrc:"10.21 kg CO₂ per gallon of diesel (US EPA GHG Emission Factors Hub 2025)",
     telem:"From Samsara, Motive, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a Class 8 stop-and-restart cycle at 0.25–0.50 gal. Pickups and light-duty trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
     gal:{min:0.05,max:0.5,step:0.05,val:0.25},
@@ -256,7 +258,7 @@ const CFG = {
   AU:{ locale:"en-AU", cur:" (AUD)", brand:"SafetyIQ · Fatigue Risk Management · Australia", title:"Fatigue Fuel Recovery Calculator",
     lede:"Enter your own numbers in kilometres, litres and AUD, then choose the efficiency gain you'll stand behind. Example values are placeholders.",
     dist:"km", distLong:"Km / day", econLbl:"L / 100 km", econU:"L/100 km", mode:"l100", priceLbl:"$ / L", priceU:"",
-    vol:"L", volLbl:"Litres recovered / yr", gainLbl:"Fleet fuel use reduction",
+    vol:"L", volLbl:"Litres recovered / yr", gainLbl:"Fleet fuel use reduction", ef:2.71, efSrc:"2.71 kg CO₂-e per litre of diesel (National Greenhouse Accounts Factors 2025)",
     telem:"From Teletrac Navman, MTData, Geotab or similar.",
     galTip:"ORNL and VTTI research puts a heavy prime mover stop-and-restart cycle at roughly 0.95–1.9 L. Utes and light rigid trucks lose less per event, and events that slow a truck without stopping it cost less, so a lower setting is more conservative.",
     gal:{min:0.2,max:1.9,step:0.05,val:0.95},
@@ -269,7 +271,7 @@ const CFG = {
   T("brand",CFG.brand); T("h1",CFG.title); T("lede",CFG.lede);
   T("milesLbl",CFG.distLong); T("distU",CFG.dist); T("econLbl",CFG.econLbl); 
   T("priceLbl",CFG.priceLbl);  T("telemSub",CFG.telem); T("unitK","per 1,000 "+CFG.dist);
-  T("galTip",CFG.galTip); T("volLbl",CFG.volLbl); T("gainLbl",CFG.gainLbl);
+  T("galTip",CFG.galTip); T("efSrc","Emissions use "+CFG.efSrc+"."); T("volLbl",CFG.volLbl); T("gainLbl",CFG.gainLbl);
   T("ppmLbl","$ / driver / mo"); T("incCostLbl","$ / incident");
   T("crashLbl","Crash cost $"); T("sirLbl","Self-insured to $"); T("headLbl","Annual savings at your chosen gain"+CFG.cur);
   const g=$("gal"); g.min=CFG.gal.min; g.max=CFG.gal.max; g.step=CFG.gal.step;
@@ -329,6 +331,7 @@ const CFG = {
                           : "Fuel only, at a "+pct+"% reduction in fatigue-linked events");
     T("gals", fmt(m.savedVol)); T("mpgGain", fmt(m.gain*100,2)+"%"); T("evAvoid", fmt(m.avoided));
     T("perTruck", x.trucks ? money(m.total/x.trucks) : "$0"); T("invest", money(m.invest));
+    T("co2Avoid", fmt(m.savedVol*CFG.ef/1000,1)); T("co2Base", fmt(m.baseVol*CFG.ef/1000));
     T("roi", m.invest ? fmt(m.roi*100)+"%" : "—");
 
     const retained = Math.min(x.crash, x.sir || x.crash);
@@ -363,6 +366,7 @@ const CFG = {
       "Fatigue-linked: <code>"+fmt(m.annualEvents)+" × "+Math.round(x.share*100)+"% = "+fmt(m.fatigueEvents)+"</code> × <code>"+fmt(x.gal,2)+" "+V+" = "+fmt(m.wasteVol)+" "+V+" wasted</code>",
       "Recovered: <code>"+fmt(m.wasteVol)+" "+V+" × "+pct+"% = "+fmt(m.savedVol)+" "+V+" × $"+fmt(x.price,2)+" = "+money(m.fuel)+"</code>"];
     if(x.incOn) L.push("Incidents: <code>"+fmt(x.inc)+" × "+money(x.incCost)+" × "+pct+"% = "+money(m.incident)+"</code>");
+    L.push("Emissions avoided: <code>"+fmt(m.savedVol)+" "+V+" × "+CFG.ef+" kg = "+fmt(m.savedVol*CFG.ef/1000,1)+" t CO₂e</code>");
     L.push("Crash offset: <code>"+money(retained)+" self-insured loss ÷ "+fmt(x.margin*100,1)+"% pre-tax margin = "+money(crashRev)+" revenue</code>");
     L.push("Investment: <code>"+fmt(x.drivers)+" drivers × $"+fmt(x.ppm,2)+" × 12 = "+money(m.invest)+"</code>");
     $("mathList").innerHTML = L.map(s=>"<li>"+s+"</li>").join("");
@@ -372,6 +376,7 @@ const CFG = {
       "Fleet: "+fmt(x.trucks)+" trucks, "+fmt(x.miles)+" "+D+"/day, "+fmt(x.days)+" days/yr, "+fmt(x.econ,1)+" "+CFG.econU+", $"+fmt(x.price,2)+"/"+V,
       "Harsh events: "+fmt(x.events,1)+(x.unit==="day"?" per truck per day":" per 1,000 "+D)+"; "+Math.round(x.share*100)+"% fatigue-linked; "+fmt(x.gal,2)+" "+V+" per event",
       "Chosen reduction: "+pct+"% (range "+band.min+"–"+band.max+"%)",
+      "Emissions avoided: "+fmt(m.savedVol*CFG.ef/1000,1)+" t CO2e per year, out of "+fmt(m.baseVol*CFG.ef/1000)+" t from the fleet",
       "Fuel recovered: "+fmt(m.savedVol)+" "+V+" / "+money(m.fuel)+" per year ("+fmt(m.gain*100,2)+"% "+CFG.gainLbl.toLowerCase()+")",
       x.incOn ? "Incident avoidance: "+money(m.incident)+" per year" : null,
       "Total annual savings: "+money(m.total)+" (range "+money(lo.total)+" to "+money(hi.total)+")",
